@@ -32,7 +32,30 @@ class Calculator {
     }
 
     calculate() {
-
+        let calculation;
+        const previousNumber = parseFloat(this.previousOperand);
+        const currantNumber = parseFloat(this.currantOperand);
+        if (isNaN(previousNumber) || isNaN(currantNumber)) {
+            switch (this.operator) {
+                case '+':
+                    calculation = previousNumber + currantNumber;
+                    break;
+                case '-':
+                    calculation = previousNumber - currantNumber;
+                    break;
+                case 'x':
+                    calculation = previousNumber * currantNumber;
+                    break;
+                case '÷':
+                    calculation = previousNumber / currantNumber;
+                    break;
+                default:
+                    return;
+            }
+        }
+        this.currantOperand = calculation;
+        this.operator = undefined;
+        this.previousOperand = '';
     }
     updateDisplay() {
 
