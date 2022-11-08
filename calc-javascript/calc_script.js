@@ -9,6 +9,35 @@ class Calculator {
         this.previousOperand = '';
         this.operator = undefined;
     }
+    delete() {
+
+    }
+    appendNumber(number) {
+        if (number === '.' && this.currantOperand.includes('.'))
+
+            return this.currantOperand = this.currantOperand.toString() + number.toString();
+
+    }
+
+
+    chooseOperation(operator) {
+        if (this.currantOperand === '') return;
+        if (this.previousOperand !== '') {
+            this.compute();
+            this.operator = operator;
+            this.previousOperand = this.currantOperand;
+            this.currantOperand = '';
+        }
+
+    }
+
+    calculate() {
+
+    }
+    updateDisplay() {
+
+    }
+
 };
 
 const numberButtons = document.querySelectorAll('[data-number]');
@@ -22,3 +51,16 @@ const currantOperandTextElement = document.querySelector('[data-currant-operand]
 
 const calculator = new Calculator(previousOperandTextElement, currantOperandTextElement);
 console.log(calculator);
+
+numberButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+        calculator.appendNumber(button.innerText);
+        calculator.updateDisplay();
+    });
+});
+operatorButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+        calculator.chooseOperation(button.innerText);
+        calculator.updateDisplay();
+    });
+});
