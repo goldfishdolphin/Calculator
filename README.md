@@ -2,5 +2,4 @@
 
 The Calculator is built with Javascript, HTML and CSS.
 
-![Calculator Preview](calculator-preview.png)
-
+<img src= 'calculator-preview.png' height=50% width=20%>
