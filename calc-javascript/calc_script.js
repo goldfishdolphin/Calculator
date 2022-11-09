@@ -1,64 +1,65 @@
 class Calculator {
-    constructor(previousOperandTextElement, currantOperandTextElement) {
+    constructor(previousOperandTextElement, currentOperandTextElement) {
         this.previousOperandTextElement = previousOperandTextElement;
-        this.currantOperandTextElement = currantOperandTextElement;
+        this.currentOperandTextElement = currentOperandTextElement;
         this.clear();
     }
     clear() {
-        this.currantOperand = '';
+        this.currentOperand = '';
         this.previousOperand = '';
         this.operator = undefined;
     }
     delete() {
-
+        this.currentOperand = this.currentOperand.toString().slice(0, -1);
     }
     appendNumber(number) {
-        if (number === '.' && this.currantOperand.includes('.'))
-
-            return this.currantOperand = this.currantOperand.toString() + number.toString();
+        if (number === '.' && this.currentOperand.includes('.')) return;
+        this.currentOperand = this.currentOperand.toString() + number.toString();
 
     }
 
 
     chooseOperation(operator) {
-        if (this.currantOperand === '') return;
+        if (this.currentOperand === '') return;
         if (this.previousOperand !== '') {
-            this.compute();
-            this.operator = operator;
-            this.previousOperand = this.currantOperand;
-            this.currantOperand = '';
+            this.calculate();
         }
+        this.operator = operator;
+        this.previousOperand = this.currentOperand;
+        this.currentOperand = '';
+
 
     }
 
     calculate() {
-        let calculation;
+        let calculation = 0;
         const previousNumber = parseFloat(this.previousOperand);
-        const currantNumber = parseFloat(this.currantOperand);
-        if (isNaN(previousNumber) || isNaN(currantNumber)) {
-            switch (this.operator) {
-                case '+':
-                    calculation = previousNumber + currantNumber;
-                    break;
-                case '-':
-                    calculation = previousNumber - currantNumber;
-                    break;
-                case 'x':
-                    calculation = previousNumber * currantNumber;
-                    break;
-                case '÷':
-                    calculation = previousNumber / currantNumber;
-                    break;
-                default:
-                    return;
-            }
+        const currentNumber = parseFloat(this.currentOperand);
+        if (isNaN(previousNumber) || isNaN(currentNumber)) return;
+        switch (this.operator) {
+            case '+':
+                calculation = previousNumber + currentNumber;
+                break;
+            case '-':
+                calculation = previousNumber - currentNumber;
+                break;
+            case 'x':
+                calculation = previousNumber * currentNumber;
+                break;
+            case '÷':
+                calculation = previousNumber / currentNumber;
+                break;
+            default:
+                return;
         }
-        this.currantOperand = calculation;
+
+        this.currentOperand = calculation;
         this.operator = undefined;
         this.previousOperand = '';
     }
     updateDisplay() {
-
+        this.currentOperandTextElement.innerText = this.currentOperand;
+        this.previousOperandTextElement.innerText = this.previousOperand;
     }
 
 };
@@ -70,9 +71,9 @@ const delButton = document.querySelector('[data-delete]');
 const equalButton = document.querySelector('[data-equal]');
 
 const previousOperandTextElement = document.querySelector('[data-previous-operand]');
-const currantOperandTextElement = document.querySelector('[data-currant-operand]');
+const currentOperandTextElement = document.querySelector('[data-current-operand]');
 
-const calculator = new Calculator(previousOperandTextElement, currantOperandTextElement);
+const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement);
 console.log(calculator);
 
 numberButtons.forEach((button) => {
@@ -85,5 +86,14 @@ operatorButtons.forEach((button) => {
     button.addEventListener('click', () => {
         calculator.chooseOperation(button.innerText);
         calculator.updateDisplay();
+
     });
+});
+clearButton.addEventListener('click', () => {
+    calculator.clear();
+    calculator.updateDisplay();
+});
+equalButton.addEventListener('click', () => {
+    calculator.calculate();
+    calculator.updateDisplay();
 });
