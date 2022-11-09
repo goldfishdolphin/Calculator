@@ -15,10 +15,7 @@ class Calculator {
     appendNumber(number) {
         if (number === '.' && this.currentOperand.includes('.')) return;
         this.currentOperand = this.currentOperand.toString() + number.toString();
-
     }
-
-
     chooseOperation(operator) {
         if (this.currentOperand === '') return;
         if (this.previousOperand !== '') {
@@ -27,12 +24,10 @@ class Calculator {
         this.operator = operator;
         this.previousOperand = this.currentOperand;
         this.currentOperand = '';
-
-
     }
 
     calculate() {
-        let calculation = 0;
+        let calculation;
         const previousNumber = parseFloat(this.previousOperand);
         const currentNumber = parseFloat(this.currentOperand);
         if (isNaN(previousNumber) || isNaN(currentNumber)) return;
@@ -57,11 +52,32 @@ class Calculator {
         this.operator = undefined;
         this.previousOperand = '';
     }
-    updateDisplay() {
-        this.currentOperandTextElement.innerText = this.currentOperand;
-        this.previousOperandTextElement.innerText = this.previousOperand;
-    }
+    getDisplayNumber(number) {
+        const stringNumber = number.toString();
+        const integerDigits = parseFloat(stringNumber.split('.')[0]);
+        const decimalDigits = stringNumber.split('.')[1];
+        let integerDisplay;
+        if (isNaN(integerDigits)) {
+            integerDisplay = '';
+        } else {
 
+            integerDisplay = integerDigits.toLocaleString('en', { maximumFractionDigits: 0 });
+        }
+        if (decimalDigits != null) {
+            return `${integerDisplay}.${decimalDigits}`;
+        }
+        else {
+            return integerDisplay;
+        }
+    }
+    updateDisplay() {
+        this.currentOperandTextElement.innerText = this.getDisplayNumber(this.currentOperand);
+        if (this.operator != null) {
+            this.previousOperandTextElement.innerText = `${this.getDisplayNumber(this.previousOperand)} ${this.operator}`;
+        } else {
+            this.previousOperandTextElement.innerText = '';
+        }
+    }
 };
 
 const numberButtons = document.querySelectorAll('[data-number]');
@@ -69,12 +85,9 @@ const operatorButtons = document.querySelectorAll('[data-operator]');
 const clearButton = document.querySelector('[data-all-clear]');
 const delButton = document.querySelector('[data-delete]');
 const equalButton = document.querySelector('[data-equal]');
-
 const previousOperandTextElement = document.querySelector('[data-previous-operand]');
 const currentOperandTextElement = document.querySelector('[data-current-operand]');
-
 const calculator = new Calculator(previousOperandTextElement, currentOperandTextElement);
-console.log(calculator);
 
 numberButtons.forEach((button) => {
     button.addEventListener('click', () => {
@@ -95,5 +108,9 @@ clearButton.addEventListener('click', () => {
 });
 equalButton.addEventListener('click', () => {
     calculator.calculate();
+    calculator.updateDisplay();
+});
+delButton.addEventListener('click', () => {
+    calculator.delete();
     calculator.updateDisplay();
 });
